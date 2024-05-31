@@ -6,11 +6,15 @@ from .extensions import CITIES, ANIMALS, SPECIES, GENDER
 class User(AbstractUser):
     """ Extended Django built-in User model"""
 
+    email = models.EmailField(blank=False, max_length=254, unique=True)
     otc = models.CharField(max_length=30, null=True, blank=True)
     tg_name = models.CharField(max_length=15, blank=False)
     is_sitter = models.BooleanField(default=False, blank=False)
     city = models.CharField(choices=CITIES, default='EVN', max_length=3)
     address = models.CharField(max_length=150, null=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
 
 class Sitter(models.Model):
