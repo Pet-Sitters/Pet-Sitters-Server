@@ -29,8 +29,8 @@ class PD(models.Model):
     given_code = models.IntegerField(validators=[MaxValueValidator(999999)], null=True) # код подразделения выдачи паспорта
     given_nm = models.TextField(max_length=500, null=True) # наименование подразделения выдачи
     first_nm = models.CharField(max_length=255, null=True) # Имя владельца
-    second_name = models.CharField(max_length=255, null=True) # Фамилия владельца
-    sur_name = models.CharField(max_length=255, null=True, blank=True) # Отчество владельца
+    second_nm = models.CharField(max_length=255, null=True) # Фамилия владельца
+    sur_nm = models.CharField(max_length=255, null=True, blank=True) # Отчество владельца
     addr_nm = models.TextField(max_length=500, null=True) # Адрес по прописке
     pic_img = models.ImageField(upload_to='passports/', null=True) # Фото паспорта
 
