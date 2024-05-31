@@ -49,7 +49,8 @@ class Owner(models.Model):
 
 
 class Admin(models.Model):
-    pass
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    employee_id = models.CharField(max_length=255, null=True)
 
 
 class Keep(models.Model):
