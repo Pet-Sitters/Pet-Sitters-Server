@@ -21,7 +21,6 @@ class PD(models.Model):
     """ Model representing sitters' passport data. Permission must be limited """
 
     # TODO надо выяснить как выглядит армянский паспорт
-    # sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, null=True)
     pass_num = models.IntegerField(null=True, validators=[MaxValueValidator(9999999999)]) # номер паспорта, с серией
     given_dt = models.DateField(null=True) # дата выдачи
     birth_dt = models.DateField(null=True) # дата рождения
