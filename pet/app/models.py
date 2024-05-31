@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator
 from .extensions import CITIES, ANIMALS, SPECIES, GENDER
 
 class User(AbstractUser):
@@ -18,12 +19,28 @@ class Sitter(models.Model):
     social = models.URLField(null=True)
     about = models.TextField(null=True)
     animals = models.CharField(choices=ANIMALS, default='NO', max_length=3)
-    passport = models.IntegerField(null=True)
-    ppt_img = models.ImageField(upload_to='passports/', null=True)
     avatar = models.ImageField(upload_to='avatars/', null=True)
     rating = models.FloatField(default=0.0)
     game = models.BooleanField(default=False)
     activated = models.BooleanField(default=False)
+
+
+class PD(models.Model):
+    """ Model representing sitters' passport data. Permission must be limited """
+
+    # TODO надо выяснить как выглядит армянский паспорт
+    sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, null=True)
+    pass_num = models.IntegerField(null=True, validators=[MaxValueValidator(9999999999)]) # номер паспорта, с серией
+    given_dt = models.DateField(null=True) # дата выдачи
+    birth_dt = models.DateField(null=True) # дата рождения
+    given_code = models.IntegerField(validators=[MaxValueValidator(999999)], null=True) # код подразделения выдачи паспорта
+    given_nm = models.TextField(max_length=500, null=True) # наименование подразделения выдачи
+    first_nm = models.CharField(max_length=255, null=True) # Имя владельца
+    second_name = models.CharField(max_length=255, null=True) # Фамилия владельца
+    sur_name = models.CharField(max_length=255, null=True, blank=True) # Отчество владельца
+    addr_nm = models.TextField(max_length=500, null=True) # Адрес по прописке
+    pic_img = models.ImageField(upload_to='passports/', null=True) # Фото паспорта
+
 
 
 class Pet(models.Model):
