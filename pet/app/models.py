@@ -14,7 +14,9 @@ class User(AbstractUser):
     address = models.CharField(max_length=150, null=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [
+        # "username"
+    ]
 
 
 class PD(models.Model):
