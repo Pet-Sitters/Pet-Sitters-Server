@@ -17,23 +17,11 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
 
-class Sitter(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    birth_date = models.DateField(null=True)
-    social = models.URLField(null=True)
-    about = models.TextField(null=True)
-    animals = models.CharField(choices=ANIMALS, default='NO', max_length=3)
-    avatar = models.ImageField(upload_to='avatars/', null=True)
-    rating = models.FloatField(default=0.0)
-    game = models.BooleanField(default=False)
-    activated = models.BooleanField(default=False)
-
-
 class PD(models.Model):
     """ Model representing sitters' passport data. Permission must be limited """
 
     # TODO надо выяснить как выглядит армянский паспорт
-    sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, null=True)
+    # sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, null=True)
     pass_num = models.IntegerField(null=True, validators=[MaxValueValidator(9999999999)]) # номер паспорта, с серией
     given_dt = models.DateField(null=True) # дата выдачи
     birth_dt = models.DateField(null=True) # дата рождения
@@ -45,6 +33,18 @@ class PD(models.Model):
     addr_nm = models.TextField(max_length=500, null=True) # Адрес по прописке
     pic_img = models.ImageField(upload_to='passports/', null=True) # Фото паспорта
 
+
+class Sitter(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    birth_date = models.DateField(null=True)
+    social = models.URLField(null=True)
+    about = models.TextField(null=True)
+    animals = models.CharField(choices=ANIMALS, default='NO', max_length=3)
+    avatar = models.ImageField(upload_to='avatars/', null=True)
+    rating = models.FloatField(default=0.0)
+    game = models.BooleanField(default=False)
+    activated = models.BooleanField(default=False)
+    pd = models.OneToOneField(PD, on_delete=models.CASCADE, null=True)
 
 
 class Pet(models.Model):
