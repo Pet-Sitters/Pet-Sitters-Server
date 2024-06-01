@@ -89,8 +89,8 @@ WSGI_APPLICATION = 'pet.wsgi.application'
 base = {
       'default': {
           'ENGINE': 'django.db.backends.postgresql_psycopg2',
-          'NAME': 'postgres',
-          'USER': 'postgres',
+          'NAME': 'myproject',
+          'USER': 'postgresuser',
           'PASSWORD': 'postgres',
           'HOST': 'localhost',
           'PORT': '5432',
