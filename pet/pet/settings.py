@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'pet.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-base = {
+DATABASES = {
       'default': {
           'ENGINE': 'django.db.backends.postgresql_psycopg2',
           'NAME': 'myproject',
@@ -160,7 +160,6 @@ SPECTACULAR_SETTINGS = {
 
 
 CORS_ORIGIN_WHITELIST = [
-    # 'http://localhost:3000'
-    '*'
+    'http://localhost:3000'
 ]
 
