@@ -1,3 +1,6 @@
 /venv/
 /pet/db.sqlite3
+/.idea/
+/.DS_Store
+__pycache__
 /pet/static/
