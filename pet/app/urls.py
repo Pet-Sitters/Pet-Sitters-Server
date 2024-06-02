@@ -1,6 +1,12 @@
 from django.urls import path, include, re_path
+from rest_framework.routers import SimpleRouter
+from .views import UserSerializerAPI
+
+
+router = SimpleRouter()
+router.register(r'user_crud', UserSerializerAPI, basename='user')
+
 
 urlpatterns = [
-    path('auth/', include('djoser.urls')),
-    re_path(r'^auth/', include('djoser.urls.authtoken')),
+    path('', include(router.urls)),
 ]
