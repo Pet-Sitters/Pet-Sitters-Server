@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from .serializers import UserSerializer
+from .models import User
 
-# Create your views here.
+
+class UserSerializerAPI(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    authentication_classes = (TokenAuthentication, )
+

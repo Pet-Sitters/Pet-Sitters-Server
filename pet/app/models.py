@@ -3,11 +3,12 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
 from .extensions import CITIES, ANIMALS, SPECIES, GENDER
 
+
 class User(AbstractUser):
     """ Extended Django built-in User model"""
 
     email = models.EmailField(blank=False, max_length=254, unique=True)
-    otc = models.CharField(max_length=30, null=True, blank=True)
+    patronym = models.CharField(max_length=30, null=True, blank=True)
     tg_name = models.CharField(max_length=15, blank=False)
     is_sitter = models.BooleanField(default=False, blank=False)
     city = models.CharField(choices=CITIES, default='EVN', max_length=3)
@@ -19,7 +20,7 @@ class User(AbstractUser):
     ]
 
 
-class PD(models.Model):
+class Passport(models.Model):
     """ Model representing sitters' passport data. Permission must be limited """
 
     # TODO надо выяснить как выглядит армянский паспорт
@@ -45,7 +46,7 @@ class Sitter(models.Model):
     rating = models.FloatField(default=0.0)
     game = models.BooleanField(default=False)
     activated = models.BooleanField(default=False)
-    pd = models.OneToOneField(PD, on_delete=models.CASCADE, null=True)
+    passport = models.OneToOneField(Passport, on_delete=models.CASCADE, null=True)
 
 
 class Pet(models.Model):
