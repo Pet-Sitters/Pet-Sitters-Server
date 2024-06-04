@@ -147,6 +147,20 @@ class Keep(models.Model):
         verbose_name_plural = "Передержки"
 
 
+class SitterFeedback(models.Model):
+    sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, verbose_name='Ситтер')
+    author = models.OneToOneField(Owner, on_delete=models.CASCADE, verbose_name='Автор')
+    content = models.TextField(max_length=500, verbose_name='Отзыв', null=True)
+    image = models.ImageField(upload_to='sitter-feedback/', null=True, blank=True, verbose_name='Фото')
+
+    def __str__(self):
+        return f"Ситтер {self.sitter.user.email}"
+
+    class Meta:
+        verbose_name = "Отзыв о ситтере"
+        verbose_name_plural = "Отзывы о ситтерах"
+
+
 class Feedback(models.Model):
 
     def __str__(self):
