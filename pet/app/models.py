@@ -88,19 +88,6 @@ class Passport(models.Model):
         verbose_name_plural = "Паспортные данные"
 
 
-class Owner(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, verbose_name='ID пользоваетеля')
-    rating = models.FloatField(default=0.0, verbose_name='Рейтинг')
-    notes = models.TextField(max_length=500, null=True, verbose_name='Заметки администратора')
-
-    def __str__(self):
-        return f"Владелец {self.id} {self.user.first_name} {self.user.last_name}"
-
-    class Meta:
-        verbose_name = "Владелец"
-        verbose_name_plural = "Владельцы"
-
-
 class Pet(models.Model):
     species = models.CharField(choices=SPECIES, null=True, max_length=3, verbose_name='Вид животного')
     breed = models.CharField(null=True, max_length=150, verbose_name='Порода')
@@ -115,7 +102,6 @@ class Pet(models.Model):
     diseases = models.CharField(default='Нет', max_length=255, verbose_name='Патологии')
     fears = models.CharField(max_length=255, null=True, verbose_name='Страхи')
     features = models.TextField(max_length=700, null=True, verbose_name='Особенности')
-    owner = models.OneToOneField(Owner, on_delete=models.CASCADE, null=True, verbose_name='ID владельца')
 
     # Для котиков
     outside_lb = models.CharField(choices=OUTSIDE_LB, null=True, blank=False, max_length=3, verbose_name='Ходит мимо лотка?')
@@ -135,11 +121,25 @@ class Pet(models.Model):
 
 
     def __str__(self):
-        return f"{self.id} {self.species.lower()} {self.name} {self.owner.user.last_name}"
+        return f"{self.id} {self.name}"
 
     class Meta:
         verbose_name = "Питомец"
         verbose_name_plural = "Питомцы"
+
+
+class Owner(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, verbose_name='ID пользоваетеля')
+    rating = models.FloatField(default=0.0, verbose_name='Рейтинг')
+    notes = models.TextField(max_length=500, null=True, verbose_name='Заметки администратора')
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True, verbose_name='Питомцы')
+
+    def __str__(self):
+        return f"Владелец {self.id}"
+
+    class Meta:
+        verbose_name = "Владелец"
+        verbose_name_plural = "Владельцы"
 
 
 class Admin(models.Model):
@@ -155,19 +155,20 @@ class Admin(models.Model):
 
 
 class Keep(models.Model):
-    owner = models.OneToOneField(Owner, on_delete=models.CASCADE, null=True, verbose_name='Заказчик/Владелец')
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True, verbose_name='Питомец')
-    sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, null=True, verbose_name='Ситтер')
-    from_date = models.DateField(verbose_name='Начало передержки', null=True)
-    to_date = models.DateField(verbose_name='Конец передержки', null=True)
-    other_pets = models.CharField(choices=OTHER_PETS, null=True, blank=False, max_length=3,
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Заказчик/Владелец')
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Питомец')
+    sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Ситтер')
+    from_date = models.DateField(verbose_name='Начало передержки', null=True, blank=True)
+    to_date = models.DateField(verbose_name='Конец передержки', null=True, blank=True)
+    other_pets = models.CharField(choices=OTHER_PETS, null=True, blank=True, max_length=3,
                                   verbose_name='Может жить с другими животными?')
-    feed = models.CharField(choices=FEED, null=True, blank=False, max_length=1,
+    feed = models.CharField(choices=FEED, null=True, blank=True, max_length=1,
                             verbose_name='Сколько р/день кормить?')
-    pick_up = models.CharField(choices=PICK_UP, null=True, blank=False, max_length=2,
+    pick_up = models.CharField(choices=PICK_UP, null=True, blank=True, max_length=2,
                                verbose_name='Заберете до 12 или после?')
-    transfer = models.CharField(choices=TRANSFER, null=True, blank=False, max_length=2,
+    transfer = models.CharField(choices=TRANSFER, null=True, blank=True, max_length=2,
                                 verbose_name='Как передадите питомца?')
+    is_active = models.BooleanField(verbose_name='Заказ активен', default=True)
 
     def __str__(self):
         return f"Передержка {self.id} {self.owner.user.last_name} {self.sitter.user.last_name}"
