@@ -19,7 +19,7 @@ class User(AbstractUser):
     ]
 
     def __str__(self):
-        return f"Пользователь {self.id}"
+        return f"Пользователь {self.id} {self.first_name} {self.last_name}"
 
     class Meta:
         verbose_name = "Пользователь"
@@ -39,7 +39,7 @@ class Sitter(models.Model):
     activated = models.BooleanField(default=False, verbose_name='Аккаунт активирован')
 
     def __str__(self):
-        return f"Ситтер - {self.user.email}"
+        return f"Ситтер {self.id} {self.user.first_name} {self.user.last_name}"
 
     class Meta:
         verbose_name = "Ситтер"
@@ -48,10 +48,10 @@ class Sitter(models.Model):
 
 class HomeImages(models.Model):
     image = models.ImageField(upload_to='home/', null=True, verbose_name='Фото дома')
-    sitter = models.ForeignKey(Sitter, on_delete=models.CASCADE, verbose_name='ID ситтера')
+    sitter = models.ForeignKey(Sitter, on_delete=models.CASCADE, verbose_name='ID ситтера', related_name='images')
 
     def __str__(self):
-        return f"Ситтер - {self.sitter.user.email}"
+        return f"Ситтер {self.sitter.user.id} {self.sitter.user.first_name} {self.sitter.user.last_name}"
 
     class Meta:
         verbose_name = "Фото дома"
@@ -93,7 +93,7 @@ class Owner(models.Model):
     notes = models.TextField(max_length=500, null=True, verbose_name='Заметки администратора')
 
     def __str__(self):
-        return f"Владелец {self.id}"
+        return f"Владелец {self.id} {self.user.first_name} {self.user.last_name}"
 
     class Meta:
         verbose_name = "Владелец"
@@ -116,7 +116,7 @@ class Pet(models.Model):
     owner = models.OneToOneField(Owner, on_delete=models.CASCADE, null=True, verbose_name='ID владельца')
 
     def __str__(self):
-        return f"{self.species.lower()} {self.name} {self.id}"
+        return f"{self.id} {self.species.lower()} {self.name} {self.owner.user.last_name}"
 
     class Meta:
         verbose_name = "Питомец"
@@ -128,7 +128,7 @@ class Admin(models.Model):
     employee_id = models.CharField(max_length=255, null=True, verbose_name='Номер сотрудника')
 
     def __str__(self):
-        return f"Администратор {self.employee_id}"
+        return f"Администратор {self.employee_id} {self.user.last_name}"
 
     class Meta:
         verbose_name = "Администратор"
