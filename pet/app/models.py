@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
-from .extensions import CITIES, ANIMALS, SPECIES, GENDER
+from .extensions import CITIES, ANIMALS, SPECIES, GENDER, HOME
 
 
 class User(AbstractUser):
@@ -33,6 +33,7 @@ class Sitter(models.Model):
     birth_date = models.DateField(null=True, verbose_name='Дата рождения')
     social = models.URLField(null=True, verbose_name='Ссылка на соц. сеть')
     about = models.TextField(null=True, verbose_name='О себе')
+    home = models.CharField(null=True, choices=HOME, max_length=4, verbose_name='Тип жилья')
     animals = models.CharField(choices=ANIMALS, default='NO', max_length=3, verbose_name='Животные дома')
     avatar = models.ImageField(upload_to='avatars/', null=True, verbose_name='Фото профиля')
     rating = models.FloatField(default=0.0, verbose_name='Рейтинг')
