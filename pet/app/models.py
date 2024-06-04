@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
-from .extensions import CITIES, ANIMALS, SPECIES, GENDER, HOME
+from .extensions import *
 
 
 class User(AbstractUser):
@@ -111,9 +111,27 @@ class Pet(models.Model):
     immunized = models.BooleanField(default=False, verbose_name='Вакцинация')
     vet_ppt = models.BooleanField(default=False, verbose_name='Ветеринарный паспорт')
     emergency_contact = models.CharField(max_length=250, null=True, verbose_name='Контакт для экстренных случаев')
-    disease = models.CharField(default='Нет', max_length=255, verbose_name='Патологии')
+    diseases = models.CharField(default='Нет', max_length=255, verbose_name='Патологии')
+    fears = models.CharField(max_length=255, null=True, verbose_name='Страхи')
     features = models.TextField(max_length=700, null=True, verbose_name='Особенности')
     owner = models.OneToOneField(Owner, on_delete=models.CASCADE, null=True, verbose_name='ID владельца')
+
+    # Для котиков
+    outside_lb = models.CharField(choices=OUTSIDE_LB, null=True, blank=False, max_length=3, verbose_name='Ходит мимо лотка?')
+    scratch = models.CharField(null=True, blank=False, max_length=255, verbose_name='Дерет мебель?')
+
+    # Для собак
+    pulls = models.CharField(choices=PULLS, null=True, blank=False, max_length=3, verbose_name='Тянет поводок?')
+    picks = models.CharField(choices=PICKS, null=True, blank=False, max_length=3, verbose_name='Подбирает с земли?')
+    take = models.CharField(choices=TAKE, null=True, blank=False, max_length=3, verbose_name='Можно отобрать?')
+    aggression = models.CharField(choices=AGGRESSION, null=True, blank=False, max_length=3, verbose_name='Агрессии?')
+    no_leash = models.CharField(choices=NO_LEASH, null=True, blank=False, max_length=3, verbose_name='Можно без поводка?')
+    dogs_contact = models.CharField(choices=DOGS_CONTACT, null=True, blank=False, max_length=3, verbose_name='Контакт с др. собаками?')
+    wash_paws = models.CharField(choices=WASH_PAWS, null=True, blank=False, max_length=4, verbose_name='Как моют лапы?')
+    pee_home = models.CharField(choices=PEE_HOME, null=True, blank=False, max_length=3, verbose_name='Туалет дома?')
+    gnaw_home = models.CharField(choices=GNAW_HOME, null=True, blank=False, max_length=3, verbose_name='Грызет вещи?')
+    walk = models.CharField(choices=WALK, null=True, blank=False, max_length=2, verbose_name='Сколько гулять?')
+
 
     def __str__(self):
         return f"{self.id} {self.species.lower()} {self.name} {self.owner.user.last_name}"
