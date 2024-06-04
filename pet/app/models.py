@@ -7,78 +7,137 @@ from .extensions import CITIES, ANIMALS, SPECIES, GENDER
 class User(AbstractUser):
     """ Extended Django built-in User model"""
 
-    email = models.EmailField(blank=False, max_length=254, unique=True)
-    patronym = models.CharField(max_length=30, null=True, blank=True)
-    tg_name = models.CharField(max_length=15, blank=False)
-    is_sitter = models.BooleanField(default=False, blank=False)
-    city = models.CharField(choices=CITIES, default='EVN', max_length=3)
-    address = models.CharField(max_length=150, null=True)
+    city = models.CharField(choices=CITIES, default='EVN', max_length=3, verbose_name='Город')
+    email = models.EmailField(blank=False, max_length=254, unique=True, verbose_name='Почта')
+    patronym = models.CharField(max_length=30, null=True, blank=True, verbose_name='Отчество')
+    tg_name = models.CharField(max_length=15, blank=False, verbose_name='Телеграм ник')
+    is_sitter = models.BooleanField(default=False, blank=False, verbose_name='Является ситтером')
+
+    address = models.CharField(max_length=150, null=True, verbose_name='Адрес')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
         # "username"
     ]
 
+    def __str__(self):
+        return f"Пользователь {self.id}"
+
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+
 
 class Passport(models.Model):
     """ Model representing sitters' passport data. Permission must be limited """
 
     # TODO надо выяснить как выглядит армянский паспорт
-    pass_num = models.IntegerField(null=True, validators=[MaxValueValidator(9999999999)]) # номер паспорта, с серией
-    given_dt = models.DateField(null=True) # дата выдачи
-    birth_dt = models.DateField(null=True) # дата рождения
-    given_code = models.IntegerField(validators=[MaxValueValidator(999999)], null=True) # код подразделения выдачи паспорта
-    given_nm = models.TextField(max_length=500, null=True) # наименование подразделения выдачи
-    first_nm = models.CharField(max_length=255, null=True) # Имя владельца
-    second_nm = models.CharField(max_length=255, null=True) # Фамилия владельца
-    sur_nm = models.CharField(max_length=255, null=True, blank=True) # Отчество владельца
-    addr_nm = models.TextField(max_length=500, null=True) # Адрес по прописке
-    pic_img = models.ImageField(upload_to='passports/', null=True) # Фото паспорта
+    pass_num = models.IntegerField(null=True,
+                                   validators=[MaxValueValidator(9999999999)],
+                                   verbose_name='Серия и номер паспорта')
+    given_dt = models.DateField(null=True, verbose_name='Дата выдачи')
+    given_code = models.IntegerField(null=True,
+                                     validators=[MaxValueValidator(999999)],
+                                     verbose_name='Код подразделения')
+    given_nm = models.TextField(max_length=500, null=True, verbose_name='Наименование подразделения')
+    first_nm = models.CharField(max_length=255, null=True, verbose_name='Имя владельца')
+    second_nm = models.CharField(max_length=255, null=True, verbose_name='Фамилия владельца')
+    sur_nm = models.CharField(max_length=255, null=True, blank=True, verbose_name='Отчество владельца')
+    birth_dt = models.DateField(null=True, verbose_name='Дата рождения')
+    addr_nm = models.TextField(max_length=500, null=True, verbose_name='Адрес прописки')
+    pic_img = models.ImageField(upload_to='passports/', null=True, verbose_name='Фото паспорта')
+
+    def __str__(self):
+        return f"Паспорт - {self.second_nm} {self.first_nm[:1:]}. {self.sur_nm[:1:]}."
+
+    class Meta:
+        verbose_name = "Паспортные данные"
+        verbose_name_plural = "Паспортные данные"
 
 
 class Sitter(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    birth_date = models.DateField(null=True)
-    social = models.URLField(null=True)
-    about = models.TextField(null=True)
-    animals = models.CharField(choices=ANIMALS, default='NO', max_length=3)
-    avatar = models.ImageField(upload_to='avatars/', null=True)
-    rating = models.FloatField(default=0.0)
-    game = models.BooleanField(default=False)
-    activated = models.BooleanField(default=False)
-    passport = models.OneToOneField(Passport, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, verbose_name='ID пользователя')
+    birth_date = models.DateField(null=True, verbose_name='Дата рождения')
+    social = models.URLField(null=True, verbose_name='Ссылка на соц. сеть')
+    about = models.TextField(null=True, verbose_name='О себе')
+    animals = models.CharField(choices=ANIMALS, default='NO', max_length=3, verbose_name='Животные дома')
+    avatar = models.ImageField(upload_to='avatars/', null=True, verbose_name='Фото профиля')
+    rating = models.FloatField(default=0.0, verbose_name='Рейтинг')
+    game = models.BooleanField(default=False, verbose_name='Прохождение игры')
+    activated = models.BooleanField(default=False, verbose_name='Аккаунт активирован')
+    passport = models.OneToOneField(Passport, on_delete=models.CASCADE, null=True, verbose_name='ID паспорта')
 
+    def __str__(self):
+        return f"Ситтер - {self.user.email}"
 
-class Pet(models.Model):
-    species = models.CharField(choices=SPECIES, default='CAT', max_length=3)
-    breed = models.CharField(null=True, max_length=150)
-    name = models.CharField(max_length=15, null=True)
-    gender = models.CharField(choices=GENDER, default='MAL', max_length=3)
-    sterilized = models.BooleanField(default=True)
-    birth_year = models.DateField(null=True)
-    weigth = models.FloatField(default=0.0)
-    immunized = models.BooleanField(default=True)
-    vet_ppt = models.BooleanField(default=True)
-    emergency_contact = models.CharField(max_length=250, null=True)
-    disease = models.BooleanField(default=False)
-    features = models.TextField(max_length=700, null=True)
+    class Meta:
+        verbose_name = "Ситтер"
+        verbose_name_plural = "Ситтеры"
 
 
 class Owner(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True)
-    rating = models.FloatField(default=0.0)
-    notes = models.TextField(max_length=500, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, verbose_name='ID пользоваетеля')
+    rating = models.FloatField(default=0.0, verbose_name='Рейтинг')
+    notes = models.TextField(max_length=500, null=True, verbose_name='Заметки администратора')
+
+    def __str__(self):
+        return f"Владелец {self.id}"
+
+    class Meta:
+        verbose_name = "Владелец"
+        verbose_name_plural = "Владельцы"
+
+
+class Pet(models.Model):
+    species = models.CharField(choices=SPECIES, null=True, max_length=3, verbose_name='Вид животного')
+    breed = models.CharField(null=True, max_length=150, verbose_name='Порода')
+    name = models.CharField(max_length=15, null=True, verbose_name='Кличка')
+    gender = models.CharField(choices=GENDER, null=True, max_length=3, verbose_name='Пол')
+    sterilized = models.BooleanField(default=False, verbose_name='Кастрация')
+    birth_year = models.DateField(null=True, verbose_name='Год рождения')
+    weigth = models.FloatField(default=0.0, verbose_name='Вес')
+    immunized = models.BooleanField(default=False, verbose_name='Вакцинация')
+    vet_ppt = models.BooleanField(default=False, verbose_name='Ветеринарный паспорт')
+    emergency_contact = models.CharField(max_length=250, null=True, verbose_name='Контакт для экстренных случаев')
+    disease = models.CharField(default='Нет', max_length=255, verbose_name='Патологии')
+    features = models.TextField(max_length=700, null=True, verbose_name='Особенности')
+    owner = models.OneToOneField(Owner, on_delete=models.CASCADE, null=True, verbose_name='ID владельца')
+
+    def __str__(self):
+        return f"{self.species.lower()} {self.name} {self.id}"
+
+    class Meta:
+        verbose_name = "Питомец"
+        verbose_name_plural = "Питомцы"
 
 
 class Admin(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    employee_id = models.CharField(max_length=255, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, verbose_name='ID пользователя')
+    employee_id = models.CharField(max_length=255, null=True, verbose_name='Номер сотрудника')
+
+    def __str__(self):
+        return f"Администратор {self.employee_id}"
+
+    class Meta:
+        verbose_name = "Администратор"
+        verbose_name_plural = "Администраторы"
 
 
 class Keep(models.Model):
-    pass
+
+    def __str__(self):
+        return f"Передержка {self.id}"
+
+    class Meta:
+        verbose_name = "Передержка"
+        verbose_name_plural = "Передержки"
 
 
 class Feedback(models.Model):
-    pass
+
+    def __str__(self):
+        return f"Отзыв {self.id}"
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
