@@ -28,10 +28,30 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
 
+class Sitter(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, verbose_name='ID пользователя')
+    birth_date = models.DateField(null=True, verbose_name='Дата рождения')
+    social = models.URLField(null=True, verbose_name='Ссылка на соц. сеть')
+    about = models.TextField(null=True, verbose_name='О себе')
+    animals = models.CharField(choices=ANIMALS, default='NO', max_length=3, verbose_name='Животные дома')
+    avatar = models.ImageField(upload_to='avatars/', null=True, verbose_name='Фото профиля')
+    rating = models.FloatField(default=0.0, verbose_name='Рейтинг')
+    game = models.BooleanField(default=False, verbose_name='Прохождение игры')
+    activated = models.BooleanField(default=False, verbose_name='Аккаунт активирован')
+
+    def __str__(self):
+        return f"Ситтер - {self.user.email}"
+
+    class Meta:
+        verbose_name = "Ситтер"
+        verbose_name_plural = "Ситтеры"
+
+
 class Passport(models.Model):
     """ Model representing sitters' passport data. Permission must be limited """
 
     # TODO надо выяснить как выглядит армянский паспорт
+    sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, verbose_name='ID ситтера', null=True)
     pass_num = models.IntegerField(null=True,
                                    validators=[MaxValueValidator(9999999999)],
                                    verbose_name='Серия и номер паспорта')
@@ -45,7 +65,8 @@ class Passport(models.Model):
     sur_nm = models.CharField(max_length=255, null=True, blank=True, verbose_name='Отчество владельца')
     birth_dt = models.DateField(null=True, verbose_name='Дата рождения')
     addr_nm = models.TextField(max_length=500, null=True, verbose_name='Адрес прописки')
-    pic_img = models.ImageField(upload_to='passports/', null=True, verbose_name='Фото паспорта')
+    pic_1 = models.ImageField(upload_to=f'passports/sitter', null=True, verbose_name='Фото паспорта')
+    pic_2 = models.ImageField(upload_to=f'passports/sitter', null=True, verbose_name='Фото паспорта')
 
     def __str__(self):
         return f"Паспорт - {self.second_nm} {self.first_nm[:1:]}. {self.sur_nm[:1:]}."
@@ -53,26 +74,6 @@ class Passport(models.Model):
     class Meta:
         verbose_name = "Паспортные данные"
         verbose_name_plural = "Паспортные данные"
-
-
-class Sitter(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, verbose_name='ID пользователя')
-    birth_date = models.DateField(null=True, verbose_name='Дата рождения')
-    social = models.URLField(null=True, verbose_name='Ссылка на соц. сеть')
-    about = models.TextField(null=True, verbose_name='О себе')
-    animals = models.CharField(choices=ANIMALS, default='NO', max_length=3, verbose_name='Животные дома')
-    avatar = models.ImageField(upload_to='avatars/', null=True, verbose_name='Фото профиля')
-    rating = models.FloatField(default=0.0, verbose_name='Рейтинг')
-    game = models.BooleanField(default=False, verbose_name='Прохождение игры')
-    activated = models.BooleanField(default=False, verbose_name='Аккаунт активирован')
-    passport = models.OneToOneField(Passport, on_delete=models.CASCADE, null=True, verbose_name='ID паспорта')
-
-    def __str__(self):
-        return f"Ситтер - {self.user.email}"
-
-    class Meta:
-        verbose_name = "Ситтер"
-        verbose_name_plural = "Ситтеры"
 
 
 class Owner(models.Model):
