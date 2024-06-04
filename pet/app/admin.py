@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User, Passport, Sitter, Pet, Owner, Admin, Keep, Feedback
+from .models import User, Passport, Sitter, Pet, Owner, Admin, Keep, Feedback, HomeImages
 
 admin.site.register(
     [
@@ -11,6 +11,7 @@ admin.site.register(
         Owner,
         Admin,
         Keep,
-        Feedback
+        Feedback,
+        HomeImages
     ]
 )

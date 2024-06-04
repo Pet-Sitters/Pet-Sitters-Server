@@ -48,6 +48,18 @@ class Sitter(models.Model):
         verbose_name_plural = "Ситтеры"
 
 
+class HomeImages(models.Model):
+    image = models.ImageField(upload_to='home/', null=True, verbose_name='Фото дома')
+    sitter = models.ForeignKey(Sitter, on_delete=models.CASCADE, verbose_name='ID ситтера')
+
+    def __str__(self):
+        return f"Ситтер - {self.sitter.user.email}"
+
+    class Meta:
+        verbose_name = "Фото дома"
+        verbose_name_plural = "Фото дома"
+
+
 class Passport(models.Model):
     """ Model representing sitters' passport data. Permission must be limited """
 
