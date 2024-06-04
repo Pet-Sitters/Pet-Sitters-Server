@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import User, Passport, Sitter, Pet, Owner, Admin
+from rest_framework.serializers import ImageField
+from .models import User, Passport, Sitter, Pet, Owner, Admin, HomeImages
+from drf_writable_nested import WritableNestedModelSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -7,61 +9,42 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'email',
+            'first_name',
+            'last_name',
             'patronym',
+            'email',
             'tg_name',
-            'is_sitter',
             'city',
             'address',
         )
 
 
-class SitterSerializer(serializers.ModelSerializer):
+class HomeImagesSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Sitter
-        fields = (
-            'birth_date',
-            'social',
-            'about',
-            'animals',
-            'avatar',
-        )
+        model = HomeImages
+        fields = ['image']
 
 
 class PassportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Passport
-        fields = (
-            'pass_num',
-            'given_dt',
-            'given_code',
-            'given_nm',
-            'first_nm',
-            'second_nm',
-            'sur_nm',
-            'birth_dt',
-            'addr_nm',
-            'pic_img',
-        )
+        exclude = ('sitter', )
+
+
+class SitterSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
+    user = UserSerializer()
+    images = HomeImagesSerializer(many=True)
+    passport = PassportSerializer()
+
+    class Meta:
+        model = Sitter
+        exclude = ['rating', 'game', 'activated']
 
 
 class PetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pet
-        fields = (
-            'species',
-            'breed',
-            'name',
-            'gender',
-            'sterilized',
-            'birth_year',
-            'weigth',
-            'immunized',
-            'vet_ppt',
-            'emergency_contact',
-            'disease',
-            'features'
-        )
+        fields = '__all__'
