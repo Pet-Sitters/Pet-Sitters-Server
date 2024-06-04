@@ -9,7 +9,8 @@ class User(AbstractUser):
 
     email = models.EmailField(blank=False, max_length=254, unique=True, verbose_name='Почта')
     patronym = models.CharField(max_length=30, null=True, blank=True, verbose_name='Отчество')
-    tg_name = models.CharField(max_length=15, blank=False, verbose_name='Телеграм ник')
+    tg_nick = models.CharField(max_length=15, blank=False, verbose_name='Телеграм ник')
+    phone_num = models.CharField(max_length=15, null=True, blank=False, verbose_name='Номер телефона')
     city = models.CharField(choices=CITIES, default='EVN', max_length=3, verbose_name='Город')
     address = models.CharField(max_length=150, null=True, verbose_name='Адрес')
 

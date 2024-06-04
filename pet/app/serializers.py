@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
             'patronym',
             'email',
-            'tg_name',
+            'tg_nick',
             'city',
             'address',
         )
