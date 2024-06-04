@@ -7,12 +7,10 @@ from .extensions import CITIES, ANIMALS, SPECIES, GENDER, HOME
 class User(AbstractUser):
     """ Extended Django built-in User model"""
 
-    city = models.CharField(choices=CITIES, default='EVN', max_length=3, verbose_name='Город')
     email = models.EmailField(blank=False, max_length=254, unique=True, verbose_name='Почта')
     patronym = models.CharField(max_length=30, null=True, blank=True, verbose_name='Отчество')
     tg_name = models.CharField(max_length=15, blank=False, verbose_name='Телеграм ник')
-    is_sitter = models.BooleanField(default=False, blank=False, verbose_name='Является ситтером')
-
+    city = models.CharField(choices=CITIES, default='EVN', max_length=3, verbose_name='Город')
     address = models.CharField(max_length=150, null=True, verbose_name='Адрес')
 
     USERNAME_FIELD = 'email'
