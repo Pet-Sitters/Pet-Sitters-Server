@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('app/', include('app.urls')),
+    path('sitter/', include('sitter.urls')),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
