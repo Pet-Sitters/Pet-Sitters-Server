@@ -178,6 +178,12 @@ class Keep(models.Model):
         verbose_name_plural = "Передержки"
 
 
+class ShortForm(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Имя')
+    tg_nick = models.CharField(max_length=255, verbose_name='Телеграм')
+    phone_num = models.IntegerField(validators=[MaxValueValidator(99999999999)], verbose_name='Номер телефона')
+
+
 class SitterFeedback(models.Model):
     sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, verbose_name='Ситтер')
     author = models.OneToOneField(Owner, on_delete=models.CASCADE, verbose_name='Автор')

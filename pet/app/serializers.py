@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.serializers import ImageField
-from .models import User, Passport, Sitter, Pet, Owner, Admin, HomeImages, Keep
+from .models import User, Passport, Sitter, Pet, Owner, Admin, HomeImages, Keep, ShortForm
 from drf_writable_nested import WritableNestedModelSerializer
 
 
@@ -76,26 +76,5 @@ class LongFormSerializer(WritableNestedModelSerializer, serializers.ModelSeriali
 class ShortFormSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
-        fields = ['first_name', 'tg_nick', 'phone_num', ]
-
-    def create(self, validated_data):
-        current_user = validated_data.pop('user')
-        filled_user = User(id=current_user, **validated_data)
-        new_owner, created = Owner.objects.get_or_create(user=current_user)
-        new_keep = Keep.objects.create(owner=new_owner, is_active=False)
-        return new_keep, new_owner
-
-
-class ActiveOrdersSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Keep
-        fields = '__all__'
-
-
-class InactiveOrdersSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Keep
+        model = ShortForm
         fields = '__all__'

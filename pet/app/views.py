@@ -32,21 +32,5 @@ class LongFormSerializerAPI(viewsets.ModelViewSet):
 
 
 class ShortFormSerializerAPI(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = ShortForm.objects.all()
     serializer_class = ShortFormSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = ShortKeepSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user.id)
-            return response.Response(request.data)
-
-
-class ActiveOrdersSerilizerAPI(viewsets.ModelViewSet):
-    queryset = Keep.objects.filter(is_active=True)
-    serializer_class = ActiveOrdersSerializer
-
-
-class InactiveOrdersSerilizerAPI(viewsets.ModelViewSet):
-    queryset = Keep.objects.filter(is_active=False)
-    serializer_class = InactiveOrdersSerializer
