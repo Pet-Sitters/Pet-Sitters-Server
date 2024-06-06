@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
-from .extensions import *
+from .extensions import CITIES, ANIMALS, HOME, SPECIES, GENDER, PULLS, PICKS, TAKE, AGGRESSION, NO_LEASH, \
+                        DOGS_CONTACT, WASH_PAWS, PEE_HOME, GNAW_HOME, WALK, OUTSIDE_LB, OTHER_PETS, FEED, \
+                        PICK_UP, TRANSFER
 
 
 class User(AbstractUser):
