@@ -1,7 +1,8 @@
 from rest_framework import viewsets, response
 from rest_framework.authentication import TokenAuthentication
-from .serializers import *
-from .models import User, Sitter, Pet, Passport, Keep
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserSerializer, SitterSerializer, PetSerializer, LongFormSerializer, ShortFormSerializer
+from .models import User, Sitter, Pet, Passport, Keep, ShortForm
 
 
 class UserSerializerAPI(viewsets.ModelViewSet):
@@ -13,16 +14,24 @@ class UserSerializerAPI(viewsets.ModelViewSet):
 class SitterSerializerAPI(viewsets.ModelViewSet):
     queryset = Sitter.objects.all()
     serializer_class = SitterSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class PetSerializerAPI(viewsets.ModelViewSet):
     queryset = Pet.objects.all()
     serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        serializer = PetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user.id)
+            return response.Response(request.data)
 
 class LongFormSerializerAPI(viewsets.ModelViewSet):
     queryset = Keep.objects.filter(is_active=True)
     serializer_class = LongFormSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         serializer = LongFormSerializer(data=request.data)
@@ -32,21 +41,5 @@ class LongFormSerializerAPI(viewsets.ModelViewSet):
 
 
 class ShortFormSerializerAPI(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = ShortForm.objects.all()
     serializer_class = ShortFormSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = ShortKeepSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user.id)
-            return response.Response(request.data)
-
-
-class ActiveOrdersSerilizerAPI(viewsets.ModelViewSet):
-    queryset = Keep.objects.filter(is_active=True)
-    serializer_class = ActiveOrdersSerializer
-
-
-class InactiveOrdersSerilizerAPI(viewsets.ModelViewSet):
-    queryset = Keep.objects.filter(is_active=False)
-    serializer_class = InactiveOrdersSerializer

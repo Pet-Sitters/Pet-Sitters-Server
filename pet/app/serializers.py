@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.serializers import ImageField
-from .models import User, Passport, Sitter, Pet, Owner, Admin, HomeImages, Keep
+from .models import User, Passport, Sitter, Pet, Owner, Admin, HomeImages, Keep, ShortForm
 from drf_writable_nested import WritableNestedModelSerializer
+from .extensions import AGGRESSION
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -51,10 +52,17 @@ class OwnerSerializer(serializers.ModelSerializer):
 
 
 class PetSerializer(serializers.ModelSerializer):
+    aggression = serializers.MultipleChoiceField(choices=AGGRESSION)
 
     class Meta:
         model = Pet
-        fields = '__all__'
+        exclude = ['owner', ]
+
+    def create(self, validated_data):
+        current_user = validated_data.pop('user')
+        owner, created = Owner.objects.get_or_create(user=current_user)
+        new_pet = Pet.objects.create(owner=owner, **validated_data)
+        return new_pet
 
 
 class LongFormSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
@@ -68,34 +76,13 @@ class LongFormSerializer(WritableNestedModelSerializer, serializers.ModelSeriali
         current_user = validated_data.pop('user')
         owner, created = Owner.objects.get_or_create(user=current_user)
         pet_info = validated_data.pop('pet')
-        new_pet, created = Pet.objects.get_or_create(owner=owner)
-        new_keep = Keep.objects.create(owner=owner, is_active=True, **validated_data)
+        new_pet = Pet.objects.create(owner=owner, **pet_info)
+        new_keep = Keep.objects.create(owner=owner, pet=new_pet, is_active=True, **validated_data)
         return owner, new_pet, new_keep
 
 
 class ShortFormSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
-        fields = ['first_name', 'tg_nick', 'phone_num', ]
-
-    def create(self, validated_data):
-        current_user = validated_data.pop('user')
-        filled_user = User(id=current_user, **validated_data)
-        new_owner, created = Owner.objects.get_or_create(user=current_user)
-        new_keep = Keep.objects.create(owner=new_owner, is_active=False)
-        return new_keep, new_owner
-
-
-class ActiveOrdersSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Keep
-        fields = '__all__'
-
-
-class InactiveOrdersSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Keep
+        model = ShortForm
         fields = '__all__'

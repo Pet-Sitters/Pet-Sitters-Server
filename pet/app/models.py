@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
-from .extensions import *
+from .extensions import CITIES, ANIMALS, HOME, SPECIES, GENDER, PULLS, PICKS, TAKE, AGGRESSION, NO_LEASH, \
+                        DOGS_CONTACT, WASH_PAWS, PEE_HOME, GNAW_HOME, WALK, OUTSIDE_LB, OTHER_PETS, FEED, \
+                        PICK_UP, TRANSFER
 
 
 class User(AbstractUser):
@@ -88,7 +90,21 @@ class Passport(models.Model):
         verbose_name_plural = "Паспортные данные"
 
 
+class Owner(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, verbose_name='ID пользоваетеля')
+    rating = models.FloatField(default=0.0, verbose_name='Рейтинг')
+    notes = models.TextField(max_length=500, null=True, verbose_name='Заметки администратора')
+
+    def __str__(self):
+        return f"Владелец {self.id}"
+
+    class Meta:
+        verbose_name = "Владелец"
+        verbose_name_plural = "Владельцы"
+
+
 class Pet(models.Model):
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, verbose_name='Владелец')
     species = models.CharField(choices=SPECIES, null=True, max_length=3, verbose_name='Вид животного')
     breed = models.CharField(null=True, max_length=150, verbose_name='Порода')
     name = models.CharField(max_length=15, null=True, verbose_name='Кличка')
@@ -111,7 +127,7 @@ class Pet(models.Model):
     pulls = models.CharField(choices=PULLS, null=True, blank=False, max_length=3, verbose_name='Тянет поводок?')
     picks = models.CharField(choices=PICKS, null=True, blank=False, max_length=3, verbose_name='Подбирает с земли?')
     take = models.CharField(choices=TAKE, null=True, blank=False, max_length=3, verbose_name='Можно отобрать?')
-    aggression = models.CharField(choices=AGGRESSION, null=True, blank=False, max_length=3, verbose_name='Агрессии?')
+    aggression = models.CharField(null=True, blank=False, max_length=255, verbose_name='Агрессии?')
     no_leash = models.CharField(choices=NO_LEASH, null=True, blank=False, max_length=3, verbose_name='Можно без поводка?')
     dogs_contact = models.CharField(choices=DOGS_CONTACT, null=True, blank=False, max_length=3, verbose_name='Контакт с др. собаками?')
     wash_paws = models.CharField(choices=WASH_PAWS, null=True, blank=False, max_length=4, verbose_name='Как моют лапы?')
@@ -126,20 +142,6 @@ class Pet(models.Model):
     class Meta:
         verbose_name = "Питомец"
         verbose_name_plural = "Питомцы"
-
-
-class Owner(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, verbose_name='ID пользоваетеля')
-    rating = models.FloatField(default=0.0, verbose_name='Рейтинг')
-    notes = models.TextField(max_length=500, null=True, verbose_name='Заметки администратора')
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True, verbose_name='Питомцы')
-
-    def __str__(self):
-        return f"Владелец {self.id}"
-
-    class Meta:
-        verbose_name = "Владелец"
-        verbose_name_plural = "Владельцы"
 
 
 class Admin(models.Model):
@@ -176,6 +178,12 @@ class Keep(models.Model):
     class Meta:
         verbose_name = "Передержка"
         verbose_name_plural = "Передержки"
+
+
+class ShortForm(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Имя')
+    tg_nick = models.CharField(max_length=255, verbose_name='Телеграм')
+    phone_num = models.IntegerField(validators=[MaxValueValidator(99999999999)], verbose_name='Номер телефона')
 
 
 class SitterFeedback(models.Model):
