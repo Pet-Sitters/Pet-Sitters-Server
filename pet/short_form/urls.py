@@ -1,9 +1,9 @@
 from django.urls import path, include, re_path
 from rest_framework.routers import SimpleRouter
-from .views import UserSerializerAPI
+from app.views import ShortFormSerializerAPI
 
 router = SimpleRouter()
-router.register(r'user_crud', UserSerializerAPI, basename='user')
+router.register(r'short_form_crud', ShortFormSerializerAPI, basename='short_form')
 
 
 urlpatterns = [
