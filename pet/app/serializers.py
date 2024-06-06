@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ImageField
 from .models import User, Passport, Sitter, Pet, Owner, Admin, HomeImages, Keep, ShortForm
 from drf_writable_nested import WritableNestedModelSerializer
+from .extensions import AGGRESSION
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -51,10 +52,17 @@ class OwnerSerializer(serializers.ModelSerializer):
 
 
 class PetSerializer(serializers.ModelSerializer):
+    aggression = serializers.MultipleChoiceField(choices=AGGRESSION)
 
     class Meta:
         model = Pet
-        fields = '__all__'
+        exclude = ['owner', ]
+
+    def create(self, validated_data):
+        current_user = validated_data.pop('user')
+        owner, created = Owner.objects.get_or_create(user=current_user)
+        new_pet = Pet.objects.create(owner=owner, **validated_data)
+        return new_pet
 
 
 class LongFormSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
