@@ -1,6 +1,6 @@
-from django.urls import path, include, re_path
+from django.urls import path, include
 from rest_framework.routers import SimpleRouter
-from app.views import PetSerializerAPI
+from .views import PetSerializerAPI
 
 router = SimpleRouter()
 router.register(r'pet_crud', PetSerializerAPI, basename='pet')

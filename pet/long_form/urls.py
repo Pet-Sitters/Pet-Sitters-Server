@@ -1,6 +1,6 @@
-from django.urls import path, include, re_path
+from django.urls import path, include
 from rest_framework.routers import SimpleRouter
-from app.views import LongFormSerializerAPI
+from .views import LongFormSerializerAPI
 
 router = SimpleRouter()
 router.register(r'long_form_crud', LongFormSerializerAPI, basename='long_form')

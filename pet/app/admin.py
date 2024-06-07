@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import User, Passport, Sitter, Pet, Owner, Admin, Keep, Feedback, HomeImages, SitterFeedback
+from .models import CustomUser, Passport, Sitter, Pet, Owner, Admin, Keep, Feedback, HomeImages, SitterFeedback
 
 admin.site.register(
     [
-        User,
+        CustomUser,
         Passport,
         Sitter,
         Pet,

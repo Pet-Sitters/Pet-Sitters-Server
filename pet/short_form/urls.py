@@ -1,6 +1,6 @@
 from django.urls import path, include, re_path
 from rest_framework.routers import SimpleRouter
-from app.views import ShortFormSerializerAPI
+from .views import ShortFormSerializerAPI
 
 router = SimpleRouter()
 router.register(r'short_form_crud', ShortFormSerializerAPI, basename='short_form')
