@@ -4,7 +4,7 @@ from app.extensions import AGGRESSION
 
 
 class PetSerializer(serializers.ModelSerializer):
-    aggression = serializers.MultipleChoiceField(choices=AGGRESSION)
+    # aggression = serializers.MultipleChoiceField(choices=AGGRESSION)
 
     class Meta:
         model = Pet
