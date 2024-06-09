@@ -9,7 +9,7 @@ class LongFormSerializer(WritableNestedModelSerializer, serializers.ModelSeriali
 
     class Meta:
         model = Keep
-        exclude = ['is_active', 'sitter', 'owner']
+        fields = '__all__'
 
     def create(self, validated_data):
         current_user = validated_data.pop('user')
@@ -17,4 +17,4 @@ class LongFormSerializer(WritableNestedModelSerializer, serializers.ModelSeriali
         pet_info = validated_data.pop('pet')
         new_pet = Pet.objects.create(owner=owner, **pet_info)
         new_keep = Keep.objects.create(owner=owner, pet=new_pet, is_active=True, **validated_data)
-        return owner, new_pet, new_keep
+        return owner, new_pet, new_keep, user

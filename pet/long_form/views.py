@@ -5,7 +5,7 @@ from app.models import Keep
 
 
 class LongFormSerializerAPI(viewsets.ModelViewSet):
-    queryset = Keep.objects.filter(is_active=True)
+    queryset = Keep.objects.filter()
     serializer_class = LongFormSerializer
     permission_classes = [IsAuthenticated]
 
