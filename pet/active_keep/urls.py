@@ -1,9 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
-from .views import LongFormSerializerAPI
+from .views import ActiveKeepSerializerAPI
 
 router = SimpleRouter()
-router.register(r'long_form_crud', LongFormSerializerAPI, basename='long_form')
+router.register(r'active_keep_crud', ActiveKeepSerializerAPI, basename='active_keep')
 
 
 urlpatterns = [

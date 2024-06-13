@@ -10,14 +10,9 @@ class CustomUser(AbstractUser):
     """ Extended Django built-in User model"""
 
     username = models.EmailField(blank=False, max_length=254, unique=True, verbose_name='Почта')
-    patronym = models.CharField(max_length=30, null=True, blank=True, verbose_name='Отчество')
-    tg_nick = models.CharField(max_length=15, blank=True, verbose_name='Телеграм ник')
-    phone_num = models.CharField(max_length=15, null=True, blank=True, verbose_name='Номер телефона')
-    city = models.CharField(choices=CITIES, default='EVN', max_length=3, verbose_name='Город', blank=True)
-    address = models.CharField(max_length=150, null=True, verbose_name='Адрес', blank=True)
 
     def __str__(self):
-        return f"Пользователь {self.id} {self.first_name} {self.last_name}"
+        return f"{self.id}. Пользователь {self.username}"
 
     class Meta:
         verbose_name = "Пользователь"
@@ -26,11 +21,16 @@ class CustomUser(AbstractUser):
 
 class Sitter(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, verbose_name='ID пользователя', blank=True)
+    first_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Имя')
+    last_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Фамилия')
+    patronym = models.CharField(max_length=30, null=True, blank=True, verbose_name='Отчество')
+    tg_nick = models.CharField(max_length=15, blank=True, verbose_name='Телеграм ник')
+    phone_num = models.CharField(max_length=15, null=True, blank=True, verbose_name='Номер телефона')
+    city = models.CharField(choices=CITIES, default='EVN', max_length=3, verbose_name='Город', blank=True)
+    address = models.CharField(max_length=150, null=True, verbose_name='Адрес', blank=True)
     birth_date = models.DateField(null=True, verbose_name='Дата рождения', blank=True)
     social = models.URLField(null=True, verbose_name='Ссылка на соц. сеть', blank=True)
     about = models.TextField(null=True, verbose_name='О себе', blank=True)
-    # city = models.CharField(choices=CITIES, default='EVN', max_length=3, verbose_name='Город', blank=True)
-    # address = models.CharField(max_length=150, null=True, verbose_name='Адрес', blank=True)
     home = models.CharField(null=True, choices=HOME, max_length=4, verbose_name='Тип жилья', blank=True)
     animals = models.CharField(choices=ANIMALS, default='NO', max_length=3, verbose_name='Животные дома', blank=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, verbose_name='Фото профиля', blank=True)
@@ -39,7 +39,7 @@ class Sitter(models.Model):
     activated = models.BooleanField(default=False, verbose_name='Аккаунт активирован', blank=True)
 
     def __str__(self):
-        return f"Ситтер {self.id} {self.user.first_name} {self.user.last_name}"
+        return f"{self.id}. Ситтер {self.last_name} {self.first_name[:1:]}. {self.patronym[:1:]}."
 
     class Meta:
         verbose_name = "Ситтер"
@@ -51,7 +51,7 @@ class HomeImages(models.Model):
     sitter = models.ForeignKey(Sitter, on_delete=models.CASCADE, verbose_name='ID ситтера', related_name='images', blank=True)
 
     def __str__(self):
-        return f"Ситтер {self.sitter.user.id} {self.sitter.user.first_name} {self.sitter.user.last_name}"
+        return f"Ситтер {self.sitter.id}"
 
     class Meta:
         verbose_name = "Фото дома"
@@ -80,7 +80,7 @@ class Passport(models.Model):
     pic_2 = models.ImageField(upload_to=f'passports/sitter', null=True, verbose_name='Фото паспорта', blank=True)
 
     def __str__(self):
-        return f"Паспорт - {self.second_nm} {self.first_nm[:1:]}. {self.sur_nm[:1:]}."
+        return f"Паспорт {self.second_nm} {self.first_nm[:1:]}. {self.sur_nm[:1:]}."
 
     class Meta:
         verbose_name = "Паспортные данные"
@@ -90,11 +90,18 @@ class Passport(models.Model):
 class Owner(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, blank=True,
                                 verbose_name='ID пользоваетеля')
+    first_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Имя')
+    last_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Фамилия')
+    patronym = models.CharField(max_length=30, null=True, blank=True, verbose_name='Отчество')
+    tg_nick = models.CharField(max_length=15, blank=True, verbose_name='Телеграм ник')
+    phone_num = models.CharField(max_length=15, null=True, blank=True, verbose_name='Номер телефона')
+    city = models.CharField(choices=CITIES, default='EVN', max_length=3, verbose_name='Город', blank=True)
+    address = models.CharField(max_length=150, null=True, verbose_name='Адрес', blank=True)
     rating = models.FloatField(default=0.0, verbose_name='Рейтинг', blank=True)
     notes = models.TextField(max_length=500, null=True, verbose_name='Заметки администратора', blank=True)
 
     def __str__(self):
-        return f"Владелец {self.id}"
+        return f"{self.id}. Владелец {self.last_name} {self.first_name[:1:]}. {self.patronym[:1:]}."
 
     class Meta:
         verbose_name = "Владелец"
@@ -138,7 +145,7 @@ class Pet(models.Model):
     walk = models.CharField(choices=WALK, null=True, blank=True, max_length=2, verbose_name='Сколько гулять?')
 
     def __str__(self):
-        return f"{self.id} {self.name}"
+        return f"{self.id}. {self.name}"
 
     class Meta:
         verbose_name = "Питомец"
@@ -150,14 +157,14 @@ class Admin(models.Model):
     employee_id = models.CharField(max_length=255, null=True, verbose_name='Номер сотрудника', blank=True)
 
     def __str__(self):
-        return f"Администратор {self.employee_id} {self.user.last_name}"
+        return f"Администратор {self.employee_id} {self.last_name}"
 
     class Meta:
         verbose_name = "Администратор"
         verbose_name_plural = "Администраторы"
 
 
-class Keep(models.Model):
+class ActiveKeep(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Заказчик/Владелец')
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Питомец')
     sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Ситтер')
@@ -175,18 +182,25 @@ class Keep(models.Model):
                               null=True, blank=True)
 
     def __str__(self):
-        return f"Передержка {self.id} {self.owner.user.last_name} {self.sitter.user.last_name}"
+        return f"{self.id}. Передержка: {self.owner.last_name} {self.pet.name} {self.sitter.last_name}"
 
     class Meta:
         verbose_name = "Передержка"
         verbose_name_plural = "Передержки"
 
 
-class ShortForm(models.Model):
+class NewKeepFrom(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь', blank=True)
     name = models.CharField(max_length=255, verbose_name='Имя', blank=True)
     tg_nick = models.CharField(max_length=255, verbose_name='Телеграм', blank=True)
     phone_num = models.IntegerField(validators=[MaxValueValidator(99999999999)], verbose_name='Номер телефона', blank=True)
+
+    def __str__(self):
+        return f"{self.id}. Короткая форма {self.owner.last_name} {self.sitter.last_name}"
+
+    class Meta:
+        verbose_name = "Короткая форма"
+        verbose_name_plural = "Короткие формы"
 
 
 class SitterFeedback(models.Model):
@@ -196,7 +210,7 @@ class SitterFeedback(models.Model):
     image = models.ImageField(upload_to='sitter-feedback/', null=True, blank=True, verbose_name='Фото')
 
     def __str__(self):
-        return f"Ситтер {self.sitter.user.email}"
+        return f"{self.id}. Отзыв о {self.sitter.last_name} от {self.author.last_name}"
 
     class Meta:
         verbose_name = "Отзыв о ситтере"
@@ -206,7 +220,7 @@ class SitterFeedback(models.Model):
 class Feedback(models.Model):
 
     def __str__(self):
-        return f"Отзыв {self.id}"
+        return f"{self.id}. Отзыв "
 
     class Meta:
         verbose_name = "Отзыв"
