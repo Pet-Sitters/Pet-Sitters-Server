@@ -8,7 +8,35 @@ class PetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pet
-        exclude = ['owner', ]
+        fields = [
+            'id',
+            'owner',
+            'species',
+            'breed',
+            'name',
+            'gender',
+            'sterilized',
+            'birth_year',
+            'weigth',
+            'immunized',
+            'vet_ppt',
+            'emergency_contact',
+            'diseases',
+            'fears',
+            'features',
+            'outside_lb',
+            'scratch',
+            'pulls',
+            'picks',
+            'take',
+            'aggression',
+            'no_leash',
+            'dogs_contact',
+            'wash_paws',
+            'pee_home',
+            'gnaw_home',
+            'walk' ,
+        ]
 
     def create(self, validated_data):
         current_user = validated_data.pop('user')
