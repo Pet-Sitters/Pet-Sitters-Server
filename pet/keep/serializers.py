@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from app.models import Owner, Keep
 from pet_api.serializers import PetSerializer
-from app.serializers import OwnerSerializer
+from owner.serializers import OwnerSerializer
 from drf_writable_nested import WritableNestedModelSerializer
 
 

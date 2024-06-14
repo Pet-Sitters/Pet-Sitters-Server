@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Owner
+from .models import CustomUser
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -9,10 +9,3 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'username',
         )
-
-
-class OwnerSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Owner
-        fields = '__all__'

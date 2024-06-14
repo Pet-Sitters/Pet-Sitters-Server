@@ -26,6 +26,7 @@ urlpatterns = [
     path('pet/', include('pet_api.urls')),
     path('short_form/', include('short_form.urls')),
     path('keep/', include('keep.urls')),
+    path('owner/', include('owner.urls')),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
