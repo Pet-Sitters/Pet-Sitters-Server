@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import CustomUser, Passport, Sitter, Pet, Owner, Admin, ActiveKeep, Feedback, HomeImages, SitterFeedback, \
-    NewKeepFrom
+from .models import CustomUser, Passport, Sitter, Pet, Owner, Admin, Keep, Feedback, HomeImages, SitterFeedback, \
+    ShortForm
 
 admin.site.register(
     [
@@ -11,10 +11,10 @@ admin.site.register(
         Pet,
         Owner,
         Admin,
-        ActiveKeep,
+        Keep,
         Feedback,
         HomeImages,
         SitterFeedback,
-        NewKeepFrom
+        ShortForm
     ]
 )

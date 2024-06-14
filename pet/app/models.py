@@ -101,7 +101,8 @@ class Owner(models.Model):
     notes = models.TextField(max_length=500, null=True, verbose_name='Заметки администратора', blank=True)
 
     def __str__(self):
-        return f"{self.id}. Владелец {self.last_name} {self.first_name[:1:]}. {self.patronym[:1:]}."
+        # return f"{self.id}. Владелец {self.last_name} {self.first_name[:1:]}. {self.patronym[:1:]}."
+        return f"Владелец {self.id}"
 
     class Meta:
         verbose_name = "Владелец"
@@ -164,7 +165,7 @@ class Admin(models.Model):
         verbose_name_plural = "Администраторы"
 
 
-class ActiveKeep(models.Model):
+class Keep(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Заказчик/Владелец')
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Питомец')
     sitter = models.OneToOneField(Sitter, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Ситтер')
@@ -189,7 +190,7 @@ class ActiveKeep(models.Model):
         verbose_name_plural = "Передержки"
 
 
-class NewKeepFrom(models.Model):
+class ShortForm(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь', blank=True)
     name = models.CharField(max_length=255, verbose_name='Имя', blank=True)
     tg_nick = models.CharField(max_length=255, verbose_name='Телеграм', blank=True)
