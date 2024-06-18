@@ -186,7 +186,8 @@ class Keep(models.Model):
                               null=True, blank=True)
 
     def __str__(self):
-        return f"{self.id}. Передержка: {self.owner.last_name} {self.pet.name} {self.sitter.last_name}"
+        # return f"{self.id}. Передержка: {self.owner.last_name} {self.pet.name} {self.sitter.last_name}"
+        return f"{self.id}. Передержка: {self.owner.last_name}"
 
     class Meta:
         verbose_name = "Передержка"
@@ -201,7 +202,7 @@ class ShortForm(models.Model):
     phone_num = models.IntegerField(validators=[MaxValueValidator(99999999999)], verbose_name='Номер телефона', blank=True)
 
     def __str__(self):
-        return f"{self.id}. Короткая форма {self.owner.last_name} {self.sitter.last_name}"
+        return f"{self.id}. Короткая форма {self.name} - {self.tg_nick}"
 
     class Meta:
         verbose_name = "Короткая форма"
