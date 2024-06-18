@@ -37,6 +37,7 @@ class PetSerializer(serializers.ModelSerializer):
             'gnaw_home',
             'walk' ,
         ]
+        read_only_fields = ['owner', ]
 
     def create(self, validated_data):
         current_user = validated_data.pop('user')
