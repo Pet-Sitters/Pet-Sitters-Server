@@ -137,7 +137,8 @@ class Pet(models.Model):
     pulls = models.CharField(choices=PULLS, null=True, blank=True, max_length=3, verbose_name='Тянет поводок?')
     picks = models.CharField(choices=PICKS, null=True, blank=True, max_length=3, verbose_name='Подбирает с земли?')
     take = models.CharField(choices=TAKE, null=True, blank=True, max_length=3, verbose_name='Можно отобрать?')
-    aggression = models.CharField(choices=AGGRESSION, null=True, blank=True, max_length=255, verbose_name='Агрессии?')
+    # aggression = models.CharField(choices=AGGRESSION, null=True, blank=True, max_length=255, verbose_name='Агрессии?')
+    aggression = models.CharField(null=True, blank=True, max_length=255, verbose_name='Агрессии?')
     no_leash = models.CharField(choices=NO_LEASH, null=True, blank=True, max_length=3,
                                 verbose_name='Можно без поводка?')
     dogs_contact = models.CharField(choices=DOGS_CONTACT, null=True, blank=True, max_length=3,
