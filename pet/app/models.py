@@ -34,7 +34,7 @@ class Sitter(models.Model):
     about = models.TextField(null=True, verbose_name='О себе', blank=True)
     home = models.CharField(null=True, choices=HOME, max_length=4, verbose_name='Тип жилья', blank=True)
     animals = models.CharField(choices=ANIMALS, default='NO', max_length=3, verbose_name='Животные дома', blank=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, verbose_name='Фото профиля', blank=True)
+    # avatar = models.ImageField(upload_to='avatars/', null=True, verbose_name='Фото профиля', blank=True)
     rating = models.FloatField(default=0.0, verbose_name='Рейтинг', blank=True)
     game = models.BooleanField(default=False, verbose_name='Прохождение игры', blank=True)
     activated = models.BooleanField(default=False, verbose_name='Аккаунт активирован', blank=True)
@@ -77,8 +77,8 @@ class Passport(models.Model):
     sur_nm = models.CharField(max_length=255, null=True, blank=True, verbose_name='Отчество владельца')
     birth_dt = models.DateField(null=True, verbose_name='Дата рождения', blank=True)
     addr_nm = models.TextField(max_length=500, null=True, verbose_name='Адрес прописки', blank=True)
-    pic_1 = models.ImageField(upload_to=f'passports/sitter', null=True, verbose_name='Фото паспорта', blank=True)
-    pic_2 = models.ImageField(upload_to=f'passports/sitter', null=True, verbose_name='Фото паспорта', blank=True)
+    # pic_1 = models.ImageField(upload_to=f'passports/sitter', null=True, verbose_name='Фото паспорта', blank=True)
+    # pic_2 = models.ImageField(upload_to=f'passports/sitter', null=True, verbose_name='Фото паспорта', blank=True)
 
     def __str__(self):
         return f"Паспорт {self.second_nm} {self.first_nm[:1:]}. {self.sur_nm[:1:]}."
