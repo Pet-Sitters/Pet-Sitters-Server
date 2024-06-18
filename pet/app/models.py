@@ -195,6 +195,7 @@ class Keep(models.Model):
 
 class ShortForm(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь', blank=True)
+    keep = models.ForeignKey(Keep, on_delete=models.CASCADE, verbose_name='Новая передержка', blank=True, null=True)
     name = models.CharField(max_length=255, verbose_name='Имя', blank=True)
     tg_nick = models.CharField(max_length=255, verbose_name='Телеграм', blank=True)
     phone_num = models.IntegerField(validators=[MaxValueValidator(99999999999)], verbose_name='Номер телефона', blank=True)
