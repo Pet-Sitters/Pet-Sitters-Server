@@ -25,7 +25,8 @@ class SitterSerializer(WritableNestedModelSerializer, serializers.ModelSerialize
     class Meta:
         model = Sitter
         fields = [
-            # "user",
+            "id",
+            "user",
             "first_name",
             "last_name",
             "patronym",
