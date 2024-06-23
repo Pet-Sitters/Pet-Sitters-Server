@@ -175,6 +175,7 @@ SPECTACULAR_SETTINGS = {
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    'http://petsitters-a32f4.web.app',
     'https://petsitters-a32f4.web.app'
 ]
 
